@@ -1,7 +1,7 @@
 
-import { createInterface } from 'node:readline';
 import { commandExit } from './command_exit.js';
 import { commandHelp } from './command_help.js';
+import { State } from "./state.js";
 
 
 
@@ -11,34 +11,29 @@ export function cleanInput(input: string): string[] {
 
 
 
-export function startREPL() {
-    const rl = createInterface({
-        input: process.stdin,
-        output: process.stdout,
-        prompt: "Pokedex > "
-    });
+export function startREPL(state: State) {
 
-    rl.prompt();
+    state.rl.prompt();
 
     
 
-    rl.on('line', (input) => {
+    state.rl.on('line', (input) => {
 
         const cleanedInput = cleanInput(input);
 
         const cmd = cleanedInput[0];
 
         if(cmd === ""){
-            rl.prompt();
+            state.rl.prompt();
         } else if(cmd === "exit") {
-            commandExit();
+            commandExit(state);
         } else if(cmd === "help") {
-            commandHelp();
+            commandHelp(state);
         } else {
             console.log("Unknown command");
         }
 
-        rl.prompt();
+        state.rl.prompt();
 
     });
   
